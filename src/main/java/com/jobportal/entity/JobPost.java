@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "job_Post")
+@Entity
 public class JobPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

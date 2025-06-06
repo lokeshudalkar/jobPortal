@@ -13,4 +13,5 @@ public class JobRequest {
     private String location;
     private double salary;
     private Long recruiterId;
+
 }

@@ -21,7 +21,6 @@ public class JobPostService {
     public JobPost createJob(JobRequest jobRequest){
         User recruiter = userRepository.findById(jobRequest.getRecruiterId()).orElseThrow(() -> new RuntimeException("Recruiter not found"));
 
-
         JobPost jobPost = JobPost.builder()
                 .title(jobRequest.getTitle())
                 .description(jobRequest.getDescription())

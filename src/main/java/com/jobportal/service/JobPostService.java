@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class JobPostService {
@@ -30,5 +31,9 @@ public class JobPostService {
                 .time(LocalDateTime.now())
                 .build();
         return jobPostRepository.save(jobPost);
+    }
+
+    public List<JobPost> getAllJobs() {
+        return jobPostRepository.findAll();
     }
 }

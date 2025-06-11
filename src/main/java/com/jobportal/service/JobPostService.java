@@ -36,4 +36,15 @@ public class JobPostService {
     public List<JobPost> getAllJobs() {
         return jobPostRepository.findAll();
     }
+
+    public List<JobPost> searchByTitle(String title){
+        return jobPostRepository.findByTitleContainingIgnoreCase(title);
+    }
+    public List<JobPost> searchByLocation(String location){
+        return jobPostRepository.findByLocationContainingIgnoreCase(location);
+    }
+    public List<JobPost> searchBySalaryRange(Double minSalary , Double maxSalary){
+        return jobPostRepository.findBySalaryBetween(minSalary, maxSalary);
+    }
+
 }

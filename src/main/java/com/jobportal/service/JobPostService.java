@@ -22,6 +22,9 @@ public class JobPostService {
     public JobPost createJob(JobRequest jobRequest){
         User recruiter = userRepository.findById(jobRequest.getRecruiterId()).orElseThrow(() -> new RuntimeException("Recruiter not found"));
 
+        if(!recruiter.getRole().name().equals("RECRUITER")){
+            throw new RuntimeException("only role with RECRUITER can post jobs");
+        }
         JobPost jobPost = JobPost.builder()
                 .title(jobRequest.getTitle())
                 .description(jobRequest.getDescription())

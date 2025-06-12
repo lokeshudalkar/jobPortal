@@ -6,6 +6,8 @@ import com.jobportal.service.JobApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/job-applications")
 public class JobApplicationController {
@@ -15,5 +17,10 @@ public class JobApplicationController {
     @PostMapping
     public JobApplication applyToJob(@RequestBody JobApplicationRequest jobApplicationRequest){
         return jobApplicationService.createApplication(jobApplicationRequest);
+    }
+
+    @GetMapping("/seeker/{seekerId}")
+    public List<JobApplication> findBySeekerId(@PathVariable Long seekerId){
+        return jobApplicationService.findBySeekerId(seekerId);
     }
 }

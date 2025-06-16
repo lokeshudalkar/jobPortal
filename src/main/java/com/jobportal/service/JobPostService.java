@@ -49,5 +49,15 @@ public class JobPostService {
     public List<JobPost> searchBySalaryRange(Double minSalary , Double maxSalary){
         return jobPostRepository.findBySalaryBetween(minSalary, maxSalary);
     }
+    public JobPost updateJob(Long id , JobPost updateJob){
+        JobPost job = jobPostRepository.findById(id).orElseThrow(() -> new RuntimeException("Job not found"));
+
+        job.setTitle(updateJob.getTitle());
+        job.setDescription(updateJob.getDescription());
+        job.setLocation(updateJob.getLocation());
+        job.setSalary(updateJob.getSalary());
+        job.setTime(LocalDateTime.now());
+        return jobPostRepository.save(job);
+    }
 
 }

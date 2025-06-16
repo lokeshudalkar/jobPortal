@@ -10,4 +10,5 @@ public interface JobPostRepository extends JpaRepository<JobPost , Long> {
     List<JobPost> findByTitleContainingIgnoreCase(String title);
     List<JobPost> findByLocationContainingIgnoreCase(String location);
     List<JobPost> findBySalaryBetween(Double min , Double max);
+
 }

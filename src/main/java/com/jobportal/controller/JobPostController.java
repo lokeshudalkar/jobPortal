@@ -53,4 +53,8 @@ public class JobPostController {
         return jobPostService.getAllJobs();
     }
 
+    @PutMapping("/update-job/{id}")
+    public JobPost updateJob(@PathVariable Long id , @RequestBody JobPost updateJob){
+        return jobPostService.updateJob(id , updateJob);
+    }
 }

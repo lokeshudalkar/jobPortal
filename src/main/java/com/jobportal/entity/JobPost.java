@@ -32,4 +32,7 @@ public class JobPost {
     @JoinColumn(name = "recruiter_id")
     private User recruiter;
 
+    @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)
+    private List<JobApplication> applications;
+
 }

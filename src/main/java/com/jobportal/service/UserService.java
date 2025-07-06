@@ -4,12 +4,17 @@ import com.jobportal.dto.UserRequest;
 import com.jobportal.entity.User;
 import com.jobportal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public User registerUser(UserRequest userRequest){
         if(userRepository.findByEmail(userRequest.getEmail()).isPresent()){
@@ -18,9 +23,10 @@ public class UserService {
         User user = User.builder()
                 .name(userRequest.getName())
                 .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
+                .password(passwordEncoder.encode(userRequest.getPassword()))
                 .role(userRequest.getRole())
                 .build();
         return userRepository.save(user);
     }
+
 }

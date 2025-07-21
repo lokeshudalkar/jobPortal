@@ -1,5 +1,6 @@
 package com.jobportal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,7 @@ public class JobPost {
 
     @ManyToOne
     @JoinColumn(name = "recruiter_id")
+    @JsonIgnore
     private User recruiter;
 
     @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)

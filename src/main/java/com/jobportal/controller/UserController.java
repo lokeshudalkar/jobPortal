@@ -3,37 +3,67 @@ package com.jobportal.controller;
 import com.jobportal.Utils.JwtUtil;
 import com.jobportal.dto.AuthRequest;
 import com.jobportal.dto.UserRequest;
+import com.jobportal.entity.JobPost;
 import com.jobportal.entity.User;
+import com.jobportal.repository.UserRepository;
+import com.jobportal.service.JobPostService;
+import com.jobportal.service.UserDetailServiceImpl;
 import com.jobportal.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.validation.Valid;
+
+
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JobPostService jobPostService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
-    @PostMapping("/register")
-    public User createUser(@RequestBody UserRequest userRequest){
-        return userService.registerUser(userRequest);
+    //To get ALL the Jobs By their title
+    @GetMapping("/title/{title}")
+    public List<JobPost> searchByTitle(@PathVariable String title){
+        try {
+            return  jobPostService.searchByTitle(title);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @PostMapping("/login")
-    public String loginUser(@RequestBody AuthRequest authRequest){
-        Authentication auth = new UsernamePasswordAuthenticationToken(authRequest.getEmail() , authRequest.getPassword());
-        return jwtUtil.generateToken(authRequest.getEmail());
+    //To get ALL the Jobs
+    @GetMapping
+    public List<JobPost> getAllJobs(){
+        return jobPostService.getAllJobs();
+    }
+
+    //For Deleting user
+    @DeleteMapping
+    public ResponseEntity<?> deleteUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String user = authentication.getName();
+        if (user != null && !user.isEmpty()){
+            userRepository.deleteByEmail(user);
+            log.info("User Deleted SuccessFully");
+            return ResponseEntity.status(HttpStatus.OK).body("User Deleted SuccessFully");
+        }
+        log.error(" User Not Found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not found!");
     }
 }

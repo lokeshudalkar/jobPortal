@@ -7,9 +7,11 @@ import com.jobportal.repository.JobPostRepository;
 import com.jobportal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JobPostService {
@@ -19,6 +21,7 @@ public class JobPostService {
     @Autowired
     private UserRepository userRepository;
 
+    @Transactional
     public JobPost createJob(JobRequest jobRequest){
         User recruiter = userRepository.findById(jobRequest.getRecruiterId()).orElseThrow(() -> new RuntimeException("Recruiter not found"));
 
@@ -49,15 +52,23 @@ public class JobPostService {
     public List<JobPost> searchBySalaryRange(Double minSalary , Double maxSalary){
         return jobPostRepository.findBySalaryBetween(minSalary, maxSalary);
     }
-    public JobPost updateJob(Long id , JobPost updateJob){
-        JobPost job = jobPostRepository.findById(id).orElseThrow(() -> new RuntimeException("Job not found"));
 
-        job.setTitle(updateJob.getTitle());
-        job.setDescription(updateJob.getDescription());
-        job.setLocation(updateJob.getLocation());
-        job.setSalary(updateJob.getSalary());
-        job.setTime(LocalDateTime.now());
-        return jobPostRepository.save(job);
+    @Transactional
+    public boolean updateJob(Long id , Long recruiterId , JobRequest updateJob){
+        Optional<JobPost> optional = jobPostRepository.findByIdAndRecruiterId(id, recruiterId);
+//        JobPost job = jobPostRepository.findById(id).orElseThrow(() -> new RuntimeException("Job not found"));
+
+        if(optional.isPresent()){
+            JobPost job = optional.get();
+            job.setTitle(updateJob.getTitle());
+            job.setDescription(updateJob.getDescription());
+            job.setLocation(updateJob.getLocation());
+            job.setSalary(updateJob.getSalary());
+            job.setTime(LocalDateTime.now());
+            jobPostRepository.save(job);
+            return true;
+        }
+        return false;
     }
 
 }

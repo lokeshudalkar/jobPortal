@@ -1,0 +1,8 @@
+
+spring :
+  application:
+    name: jobportal
+
+  profiles :
+    active : prod
+

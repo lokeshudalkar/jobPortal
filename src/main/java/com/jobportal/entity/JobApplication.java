@@ -1,5 +1,6 @@
 package com.jobportal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,16 +18,18 @@ import java.time.LocalDateTime;
 public class JobApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long job_id;
+    private Long application_id;
 
     private String resumeUrl;
     private LocalDateTime appliedAt;
 
     @ManyToOne
     @JoinColumn(name = "job_post_id")
+    @JsonIgnore
     private JobPost jobPost;
 
     @ManyToOne
     @JoinColumn(name = "seeker_id")
+    @JsonIgnore
     private User seeker;
 }

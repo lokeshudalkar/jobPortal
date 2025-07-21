@@ -5,6 +5,9 @@ package com.jobportal.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -14,7 +17,7 @@ import lombok.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id; // Primary Key
 
     @Column(nullable = false)
@@ -29,5 +32,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;  // SEEKER, RECRUITER, ADMIN
+
+    @OneToMany(mappedBy = "recruiter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobPost> jobPosts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "seeker", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobApplication> jobApplications = new ArrayList<>();
 }
 

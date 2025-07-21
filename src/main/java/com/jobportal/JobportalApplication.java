@@ -8,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @SpringBootApplication
-
 public class JobportalApplication {
 
 	public static void main(String[] args) {

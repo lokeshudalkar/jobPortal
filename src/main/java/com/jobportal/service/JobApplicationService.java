@@ -10,6 +10,7 @@ import com.jobportal.repository.JobPostRepository;
 import com.jobportal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +26,7 @@ public class JobApplicationService {
     @Autowired
     private UserRepository userRepository;
 
+    @Transactional
     public JobApplication createApplication(JobApplicationRequest jobApplicationRequest){
         User seeker = userRepository.findById(jobApplicationRequest.getSeekerId())
                 .orElseThrow(() -> new RuntimeException("Job Applicant Not found"));
@@ -48,4 +50,9 @@ public class JobApplicationService {
     public List<JobApplication> findBySeekerId(Long seekerId){
         return jobApplicationRepository.findBySeekerId(seekerId);
     }
+    public List<JobApplication> findByJobId(Long jobPostId){
+        return jobApplicationRepository.findByJobPostId(jobPostId);
+    }
+
+
 }

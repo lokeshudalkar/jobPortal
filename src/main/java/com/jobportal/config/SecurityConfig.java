@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,8 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig  {
-//    @Autowired
-//    private UserDetailServiceImpl userDetailService;
+    @Autowired
+    private UserDetailServiceImpl userDetailService;
 
     @Autowired
     private JwtFilter jwtFilter;
@@ -28,13 +27,14 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(request -> request.
-                        requestMatchers("/user/**").permitAll()
+                        requestMatchers("/user/**").authenticated()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/jobs/**").hasRole("RECRUITER")
+                
                 .anyRequest().permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter , UsernamePasswordAuthenticationFilter.class)
                 .build();
-
     }
 //    @Autowired
 //    public void configurationGlobal(AuthenticationManagerBuilder auth) throws Exception {
